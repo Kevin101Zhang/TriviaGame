@@ -1,94 +1,112 @@
 $(document).ready(function () {
 
-    var QuestionBank = ["Why Do You Love Me?", "Does This Dress Make Me Look Fat?", "Why Were You Out So Late...?", "I'm Fine.", "Do You Think She Is Pretty?", "Yeah It Is 100% Fine That You Go Out With The Guys Tonight...", "Why Did You Chose Me?", "How Do You Lower The Asymtopic Complexity Of A One Dimensional Peak Finder?"];
-    var question0 = ["AWhat", "BWho", "CWhere", "DWhy"];
-    var question1 = ["Dog", "Cat", "Monket", "Goose"];
-    var question2 = ["EWhat", "FWho", "GWhere", "HWhy"];
-    var question3 = ["What", "Who", "Where", "Why"];
-    var question4 = ["AWhat", "BWho", "CWhere", "DWhy"];
-    var question5 = ["Dog", "Cat", "Monket", "Goose"];
-    var question6 = ["EWhat", "FWho", "GWhere", "HWhy"];
-    var question7 = ["EWhat", "FWho", "GWhere", "HWhy"];
-    var question8 = ["EWhat", "FWho", "GWhere", "HWhy"];
-    var count = 0; var correct = 0; var incorrect = 0; var countDown = 60;
-    //make it phone themed...//
-    var answers = { /// write the correct answers
-        question0: "AWhat",
-        question1: "AWhat",
-        question2: "AWhat",
-        question3: "AWhat",
-        question4: "AWhat",
-        question5: "AWhat",
-        question6: "AWhat",
-        question7: "AWhat",
-        question8: "AWhat"
+    var questionNanswer = {
+        //BROKEN INTO 3 SUBPARTS [QUESTION, CHOICES, ANSWER]
+        problem0: {
+            question0: "Why Do You Love Me?",
+            choice0: ["Because you're so easy to talk to.", "I love you because I do", "You actually care about me.", "You're just perfect."],
+            answer0: "I love you because I do",
+        },
+        problem1: {
+            question1: "Does This Dress Make Me Look Fat?",
+            choice1: ["It makes me look skinny", "Of course it doesn't", "Oh I like the other dress better", "I love Puppies"],
+            answer1: "Oh I like the other dress better",
+        },
+        problem2: {
+            question2: "Why Were You Out So Late...?",
+            choice2: ["To prepare something special for you tomorrow", "I was working overtime", "Jenny and I had a drink", "I ate with a co-worker"],
+            answer2: "To prepare something special for you tomorrow",
+        },
+        problem3: {
+            question3: "I'm Fine.",
+            choice3: ["Okay", "Cool", "*Leave, she needs alone time", "No you're not"],
+            answer3: "No you're not",
+        },
+        problem4: {
+            question4: "Do You Think She Is Pretty?",
+            choice4: ["Not as pretty as you", "Yes she is gorgeous", "Honey, thats a statue", "I love toast"],
+            answer4: "Not as pretty as you",
+        },
+        problem5: {
+            question5: "Yeah It Is 100% Fine That You Go Out With The Guys Tonight...",
+            choice5: ["Okay, See you tonight", "Awesome want me to pick up anything", "I'll just stay in with you", "Love you Bye!"],
+            answer5: "I'll just stay in with you",
+        },
+        problem6: {
+            question6: "Im fine with anything, you choose",
+            choice6: ["Burgers and Pizza", "Pasta", "Steak", "All of the Above"],
+            answer6: "All of the Above",
+        },
+        problem7: {
+            question7: "How Do You Lower The Asymtopic Complexity Of A One Dimensional Peak Finder?",
+            choice7: ["Prim's Algortihm", "Greedy Ascent Method", "Divide and Conquer Method", "Kruskal's Algorithm"],
+            answer7: "Divide and Conquer Method"
+        }
     }
+    var count = 0; var correct = 0; var incorrect = 0; var countDown = 10;
 
-    $(document).ready(function () {
+    $(document).ready(function () { //FUNCTION: RELOAD PAGES
         $(".Reset").click(function () {
             location.reload(true);
         });
     });
 
-    var runModal = () => {
-        $(".modal").modal('show');
-        $("#correct").append(correct);
-        $("#incorrect").append(incorrect);
-
-    }
-
-    setInterval(function () {
-        var countFrom60 = $("#countDownTimer_Placeholder").html(countDown);
+    setInterval(function () { //FUNCTION: TIME INTERVAL
+        $("#countDownTimer_Placeholder").html(countDown);
         countDown--;
         if (countDown === 0) {
+            clearInterval(countDown);// hypothetically will clear and stop the function.
             runModal();
-            clearInterval(countFrom60);// hypothetically will clear and stop the function.
         }
     }, 1000);
 
-    var MakeEmpty = () => {
+    var runModal = () => {  //FUNCTION: RUNNING MODAL WHEN GAME IS COMPLETE
+        $(".modal").modal('show');
+        $("#correct").append(correct);
+        $("#incorrect").append(incorrect);
+    }
+
+    var MakeEmpty = () => { //FUNCTION: MAKE THE QUESTION & ANSWER SLOTS EMPTY
         $(".Question").html(" ");
         for (var i = 0; i < 4; i++) {
             $(".Panswer" + i).html(" ");
         }
     }
 
-    var appendQuestion = () => {
-        $(".Question").append('<h2>' + QuestionBank[count] + '<h2>');
+    var appendQuestion = () => { //FUNCTION: APPENDS THE QUESTION AND ANSWER CHOICES
+        $(".Question").append('<h2>' + questionNanswer["problem" + count]["question" + count] + '<h2>');
         for (var i = 0; i < 4; i++) {
-            $(".Panswer" + i).append('<input type="button" value="' + eval('question' + count)[i] + '" class="active" />');
+            $(".Panswer" + i).append('<input type="button" value="' + questionNanswer["problem" + count]["choice" + count][i] + '" class="active" />');
         }
     }
 
-    function eightQuestions() {
-        if (count === 8) {
+    function sevenQuestions() { //FUNCTION: RECURSIVE FUNCTION TO START GAME
+        if (count === 8) {  // EXIT CONDITION
             runModal();
             return 0;
         }
         appendQuestion();
         $(".active").on("click", function () {
-            $(this).val() === answers[eval('question' + count)] ? correct++ : incorrect++;
+            $(this).val() === questionNanswer["problem" + count]["answer" + count] ? correct++ : incorrect++;
+            // appendCorrectAnswer();
             count++;
             MakeEmpty();
-            eightQuestions();
+            sevenQuestions(); // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
         });
     }
-
-    eightQuestions(); // calling upon the function
-
-
-
-
-    for (var i=0; i<QuestionBank.length; i++){
-        for (var j=0; j<QuestionBank.length; j++){
-            console.log(this);
-        }
-    }
-
-
+    sevenQuestions();
 });
+    // var appendCorrectAnswer = () => { //FUNCTION: APPENDS THE CORRECT ANSWER IF INCORRECT ANSWER WAS CHOSEN
+    //     $(".Question").html("Debatable Answer");
+    //     $(".Panswer0").html(questionNanswer["problem" + count]["answer" + count]).css({ "color": "red", "font-size": "45px", "font-family": "impact", });
+    // }
 
-//stop timer;
-//reload button; hypothetically should work.  
-
-
+    // function appendCorrectAnswer() {
+    //     setTimeout(function () {
+    //         if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
+    //             alert('Wrong Answer');
+    //             $(".Question").html("Debatable Answer");
+    //             $(".Panswer0").html(questionNanswer["problem" + count]["answer" + count]).css({ "color": "red", "font-size": "45px", "font-family": "impact", });
+    //         }
+    //     }, 5000);
+    // }
