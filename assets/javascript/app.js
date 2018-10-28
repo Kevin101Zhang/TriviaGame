@@ -3,47 +3,47 @@ $(document).ready(function () {
     var questionNanswer = {
         //BROKEN INTO 3 SUBPARTS [QUESTION, CHOICES, ANSWER]
         problem0: {
-            question0: "Why Do You Love Me?",
-            choice0: ["Because you're so easy to talk to.", "I love you because I do", "You actually care about me.", "You're just perfect."],
-            answer0: "I love you because I do",
+            question0: "Charlie Brown's crush, the “Little Red-Haired Girl”, name is?",
+            choice0: ["Marcie", "Heather", "Peppermint Patty", "Violet Gray"],
+            answer0: "Heather",
         },
         problem1: {
-            question1: "Does This Dress Make Me Look Fat?",
-            choice1: ["It makes me look skinny", "Of course it doesn't", "Oh I like the other dress better", "I love Puppies"],
-            answer1: "Oh I like the other dress better",
+            question1: "Name the dirty character who always a cloud of dust surrounding him?",
+            choice1: ["Rerun van Pelt", "Pig Pen", "Shermy", "Floyd"],
+            answer1: "Pig Pen",
         },
         problem2: {
-            question2: "Why Were You Out So Late...?",
-            choice2: ["To prepare something special for you tomorrow", "I was working overtime", "Jenny and I had a drink", "I ate with a co-worker"],
-            answer2: "To prepare something special for you tomorrow",
+            question2: "What was Linus and Lucy’s last name?",
+            choice2: ["Agate", "Van Pelt", "Cormac", "Reinhard"],
+            answer2: "Van Pelt",
         },
         problem3: {
-            question3: "I'm Fine.",
-            choice3: ["Okay", "Cool", "*Leave, she needs alone time", "No you're not"],
-            answer3: "No you're not",
+            question3: "Who does Schroeder have sitting on his piano?",
+            choice3: ["Chopin", "Bach", "Beethoven", "Mozart"],
+            answer3: "Beethoven",
         },
         problem4: {
-            question4: "Do You Think She Is Pretty?",
-            choice4: ["Not as pretty as you", "Yes she is gorgeous", "Honey, thats a statue", "I love toast"],
-            answer4: "Not as pretty as you",
+            question4: "What is the name of Snoopy’s brother who lives out west?",
+            choice4: ["Olaf", "Andy", "Spike", "Marbles"],
+            answer4: "Spike",
         },
         problem5: {
-            question5: "Yeah It Is 100% Fine That You Go Out With The Guys Tonight...",
-            choice5: ["Okay, See you tonight", "Awesome want me to pick up anything", "I'll just stay in with you", "Love you Bye!"],
-            answer5: "I'll just stay in with you",
+            question5: "What does Woodstock like to swim in?",
+            choice5: ["The pond", "The dog dish", "The lake", "The sink"],
+            answer5: "The dog dish",
         },
         problem6: {
-            question6: "Im fine with anything, you choose",
-            choice6: ["Burgers and Pizza", "Pasta", "Steak", "All of the Above"],
-            answer6: "All of the Above",
+            question6: "Who is Snoopy's best friend",
+            choice6: ["Charlie Brown", "Woodstock", "Spike", "Linus"],
+            answer6: "Woodstock",
         },
         problem7: {
-            question7: "How Do You Lower The Asymtopic Complexity Of A One Dimensional Peak Finder?",
-            choice7: ["Prim's Algortihm", "Greedy Ascent Method", "Divide and Conquer Method", "Kruskal's Algorithm"],
-            answer7: "Divide and Conquer Method"
+            question7: "What position does Lucy play on their baseball team?",
+            choice7: ["Right field", "Left field", "Quarterback", " Center"],
+            answer7: "Right field"
         }
     }
-    var count = 0; var correct = 0; var incorrect = 0; var countDown = 10;
+    var count = 0; var correct = 0; var incorrect = 0; var countDown = 75;
 
     $(document).ready(function () { //FUNCTION: RELOAD PAGES
         $(".Reset").click(function () {
@@ -51,14 +51,6 @@ $(document).ready(function () {
         });
     });
 
-    setInterval(function () { //FUNCTION: TIME INTERVAL
-        $("#countDownTimer_Placeholder").html(countDown);
-        countDown--;
-        if (countDown === 0) {
-            clearInterval(countDown);// hypothetically will clear and stop the function.
-            runModal();
-        }
-    }, 1000);
 
     var runModal = () => {  //FUNCTION: RUNNING MODAL WHEN GAME IS COMPLETE
         $(".modal").modal('show');
@@ -68,6 +60,7 @@ $(document).ready(function () {
 
     var MakeEmpty = () => { //FUNCTION: MAKE THE QUESTION & ANSWER SLOTS EMPTY
         $(".Question").html(" ");
+        $(".TheAnswer").html(" ");
         for (var i = 0; i < 4; i++) {
             $(".Panswer" + i).html(" ");
         }
@@ -79,6 +72,21 @@ $(document).ready(function () {
             $(".Panswer" + i).append('<input type="button" value="' + questionNanswer["problem" + count]["choice" + count][i] + '" class="active" />');
         }
     }
+    appendCorrect = () => {
+        setTimeout(function () {
+            MakeEmpty();
+            count++;
+            sevenQuestions();
+        }, 2000);
+    }
+
+    congratsForCorrect = () => {
+        setTimeout(function () {
+            MakeEmpty();
+            count++;
+            sevenQuestions();
+        }, 2000);
+    }
 
     function sevenQuestions() { //FUNCTION: RECURSIVE FUNCTION TO START GAME
         if (count === 8) {  // EXIT CONDITION
@@ -87,26 +95,34 @@ $(document).ready(function () {
         }
         appendQuestion();
         $(".active").on("click", function () {
-            $(this).val() === questionNanswer["problem" + count]["answer" + count] ? correct++ : incorrect++;
-            // appendCorrectAnswer();
-            count++;
-            MakeEmpty();
-            sevenQuestions(); // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
+            // $(this).val() === questionNanswer["problem" + count]["answer" + count] ? correct++ : incorrect++;
+            if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
+                correct++;
+                MakeEmpty();
+                $(".TheAnswer").html("Goodjob! It is Correct").css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
+                congratsForCorrect();
+            } else {
+                incorrect++
+                MakeEmpty();
+                $(".TheAnswer").html("Incorrect the Answer is:<br><em> "+ questionNanswer["problem" + count]["answer" + count]).css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
+                appendCorrect();
+
+            }
+            // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
         });
     }
+    $(".instructions").on("click", function(){
+        $("#button").css('visibility','hidden');
+        $(".read").css('visibility','hidden');
     sevenQuestions();
-});
-    // var appendCorrectAnswer = () => { //FUNCTION: APPENDS THE CORRECT ANSWER IF INCORRECT ANSWER WAS CHOSEN
-    //     $(".Question").html("Debatable Answer");
-    //     $(".Panswer0").html(questionNanswer["problem" + count]["answer" + count]).css({ "color": "red", "font-size": "45px", "font-family": "impact", });
-    // }
 
-    // function appendCorrectAnswer() {
-    //     setTimeout(function () {
-    //         if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
-    //             alert('Wrong Answer');
-    //             $(".Question").html("Debatable Answer");
-    //             $(".Panswer0").html(questionNanswer["problem" + count]["answer" + count]).css({ "color": "red", "font-size": "45px", "font-family": "impact", });
-    //         }
-    //     }, 5000);
-    // }
+    setInterval(function () { //FUNCTION: TIME INTERVAL
+        $("#countDownTimer_Placeholder").html(countDown);
+        countDown--;
+        if (countDown === 0) {
+            clearInterval(countDown);// hypothetically will clear and stop the function.
+            runModal();
+        }
+    }, 1000);
+    });
+});
