@@ -44,15 +44,14 @@ $(document).ready(function () {
         }
     }
     var count = 0; var correct = 0; var incorrect = 0; var countDown = 75;
-
-    $(document).ready(function () { //FUNCTION: RELOAD PAGES
+        
+    //FUNCTION: RELOAD PAGES IS FIXED WITHOUT 2ND READY FUNCTION 
         $(".Reset").click(function () {
             location.reload(true);
         });
-    });
 
 
-    var runModal = () => {  //FUNCTION: RUNNING MODAL WHEN GAME IS COMPLETE
+    var runResultsForGame = () => {  //FUNCTION: RUNNING MODAL WHEN GAME IS COMPLETE
         $(".modal").modal('show');
         $("#correct").append(correct);
         $("#incorrect").append(incorrect);
@@ -72,7 +71,7 @@ $(document).ready(function () {
             $(".Panswer" + i).append('<input type="button" value="' + questionNanswer["problem" + count]["choice" + count][i] + '" class="active" />');
         }
     }
-    appendCorrect = () => {
+    appendCorrectAnswer = () => {
         setTimeout(function () {
             MakeEmpty();
             count++;
@@ -88,41 +87,63 @@ $(document).ready(function () {
         }, 2000);
     }
 
+
+
+
+
     function sevenQuestions() { //FUNCTION: RECURSIVE FUNCTION TO START GAME
         if (count === 8) {  // EXIT CONDITION
-            runModal();
+            runResultsForGame();
             return 0;
         }
         appendQuestion();
-        $(".active").on("click", function () {
-            // $(this).val() === questionNanswer["problem" + count]["answer" + count] ? correct++ : incorrect++;
-            if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
-                correct++;
-                MakeEmpty();
-                $(".TheAnswer").html("Goodjob! It is Correct").css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
-                congratsForCorrect();
-            } else {
-                incorrect++
-                MakeEmpty();
-                $(".TheAnswer").html("Incorrect the Answer is:<br><em> "+ questionNanswer["problem" + count]["answer" + count]).css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
-                appendCorrect();
 
-            }
-            // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
-        });
     }
-    $(".instructions").on("click", function(){
+
+    $(".active").on("click", function () {  //DONT LEAVE ANY EVENT LISTENERS INTO A FUNCTION:::CALL IT ONCE
+            
+
+        if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
+            correct++;
+            MakeEmpty();
+            $(".TheAnswer").html("Goodjob! It is Correct").css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
+            congratsForCorrect();
+
+        } else {
+            incorrect++
+            MakeEmpty();
+            $(".TheAnswer").html("Incorrect the Answer is:<br><em> "+ questionNanswer["problem" + count]["answer" + count]).css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
+            appendCorrectAnswer();
+            
+            sevenQuestions();
+
+        }
+        // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
+    });
+
+
+
+
+
+    $(".instructions").on("click", function(){  //INSTRUCTIONS BEFORE YOU PLAY
         $("#button").css('visibility','hidden');
         $(".read").css('visibility','hidden');
-    sevenQuestions();
 
-    setInterval(function () { //FUNCTION: TIME INTERVAL
+    sevenQuestions(); //ONCLICK OF THE START BUTTON THE GAME
+
+    setInterval(function () { //FUNCTION: TIME INTERVAL TO START WHEN USER BEGINS GAME
         $("#countDownTimer_Placeholder").html(countDown);
         countDown--;
         if (countDown === 0) {
-            clearInterval(countDown);// hypothetically will clear and stop the function.
-            runModal();
+            clearInterval(countDown);
+            runResultsForGame();
         }
     }, 1000);
     });
+
+
+
 });
+
+
+//DEFINE YOUR FUNCTIONS CONCISLY
