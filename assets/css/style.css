@@ -31,14 +31,26 @@ background-color: pink;
     width: 45%;
     margin-left:4.5%;
 }
+
 /* .Question{
     color: white;
     font-family: "Bubblegum Sans";
     color:white;
     font-size: 48px;
 } */
-.Panswer0, .Panswer1, .Panswer2,.Panswer3{
+.AnswerChoice0, .AnswerChoice1, .AnswerChoice2,.AnswerChoice3{
     text-align: left;
+}
+input:hover{
+    background: red;
+    color: white;
+}
+input{
+    padding: 1%;
+    background-color: skyblue;
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid black;
 }
 p.timeleftText,#countDownTimer_Placeholder{
 
@@ -55,12 +67,12 @@ h2{
     font-size: 25px;
     width: 45%;
 }
-.instructions{
+.instructionsNStartGame{
     color: white;
     font-family: "Bubblegum Sans";
     font-size: 18px;
 }
-.read{
+#titleOfGame{
     color: whitesmoke;
     font-family: "Bubblegum Sans";
     font-size: 30px;

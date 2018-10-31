@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     var questionNanswer = {
-        //BROKEN INTO 3 SUBPARTS [QUESTION, CHOICES, ANSWER]
+
         problem0: {
             question0: "Charlie Brown's crush, the “Little Red-Haired Girl”, name is?",
             choice0: ["Marcie", "Heather", "Peppermint Patty", "Violet Gray"],
@@ -43,107 +43,89 @@ $(document).ready(function () {
             answer7: "Right field"
         }
     }
-    var count = 0; var correct = 0; var incorrect = 0; var countDown = 75;
-        
-    //FUNCTION: RELOAD PAGES IS FIXED WITHOUT 2ND READY FUNCTION 
-        $(".Reset").click(function () {
-            location.reload(true);
-        });
+    var count = 0;
+    var correct = 0;
+    var incorrect = 0;
+    var countDown = 90;
 
+    $(".resetGame").click(function () {
+        location.reload(true);
+    });
 
-    var runResultsForGame = () => {  //FUNCTION: RUNNING MODAL WHEN GAME IS COMPLETE
+    $(".instructionsNStartGame").on("click", function () {
+        $("#startButton").remove();
+        $("#titleOfGame").remove();
+        sevenQuestions();
+
+        setInterval(function () {
+            $("#countDownTimer_Placeholder").html(countDown);
+            countDown--;
+            if (countDown === 0) {
+                clearInterval(countDown);
+                runResultOfGame();
+            }
+        }, 1000);    
+    });
+
+    function appendQuestion() { 
+        $(".Question").append('<h2>' + questionNanswer["problem" + count]["question" + count] + '<h2>');
+        for (var i = 0; i < 4; i++) {
+            $(".AnswerChoice" + i).append('<input type="button" value="' + questionNanswer["problem" + count]["choice" + count][i] + '"/>');
+        }
+    }
+
+    function appendCorrectAnswer() {
+        setTimeout(function () {
+            emptyPlaceholders();
+            count++;
+            sevenQuestions();
+        }, 2000);
+    }
+
+    function congratulateForCorrectAnswer() {
+        setTimeout(function () {
+            emptyPlaceholders();
+            count++;
+            sevenQuestions();
+        }, 2000);
+    }
+
+    function emptyPlaceholders() { 
+        $(".Question").html(" ");
+        $(".TheAnswer").html(" ");
+
+        for (var i = 0; i < 4; i++) {
+            $(".AnswerChoice" + i).html(" ");
+        }
+    }
+
+    function runResultOfGame() {  
         $(".modal").modal('show');
         $("#correct").append(correct);
         $("#incorrect").append(incorrect);
     }
 
-    var MakeEmpty = () => { //FUNCTION: MAKE THE QUESTION & ANSWER SLOTS EMPTY
-        $(".Question").html(" ");
-        $(".TheAnswer").html(" ");
-        for (var i = 0; i < 4; i++) {
-            $(".Panswer" + i).html(" ");
-        }
-    }
 
-    var appendQuestion = () => { //FUNCTION: APPENDS THE QUESTION AND ANSWER CHOICES
-        $(".Question").append('<h2>' + questionNanswer["problem" + count]["question" + count] + '<h2>');
-        for (var i = 0; i < 4; i++) {
-            $(".Panswer" + i).append('<input type="button" value="' + questionNanswer["problem" + count]["choice" + count][i] + '" class="active" />');
-        }
-    }
-    appendCorrectAnswer = () => {
-        setTimeout(function () {
-            MakeEmpty();
-            count++;
-            sevenQuestions();
-        }, 2000);
-    }
-
-    congratsForCorrect = () => {
-        setTimeout(function () {
-            MakeEmpty();
-            count++;
-            sevenQuestions();
-        }, 2000);
-    }
-
-
-
-
-
-    function sevenQuestions() { //FUNCTION: RECURSIVE FUNCTION TO START GAME
-        if (count === 8) {  // EXIT CONDITION
-            runResultsForGame();
+    function sevenQuestions() { 
+        if (count === 8) {  
+            runResultOfGame();
             return 0;
         }
         appendQuestion();
-
     }
 
-    $(".active").on("click", function () {  //DONT LEAVE ANY EVENT LISTENERS INTO A FUNCTION:::CALL IT ONCE
-            
-
+    $(".active").on("click", function () {
         if ($(this).val() === questionNanswer["problem" + count]["answer" + count]) {
             correct++;
-            MakeEmpty();
-            $(".TheAnswer").html("Goodjob! It is Correct").css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
-            congratsForCorrect();
-
+            emptyPlaceholders();
+            $(".TheAnswer").html("Goodjob! It is Correct").css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%" });
+            congratulateForCorrectAnswer();
         } else {
             incorrect++
-            MakeEmpty();
-            $(".TheAnswer").html("Incorrect the Answer is:<br><em> "+ questionNanswer["problem" + count]["answer" + count]).css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%"});
+            emptyPlaceholders();
+            $(".TheAnswer").html("Incorrect the Answer is:<br><em> " + questionNanswer["problem" + count]["answer" + count]).css({ "color": "black", "font-size": "28px", "font-family": "Bubblegum Sans", "margin-left": "5%" });
             appendCorrectAnswer();
-            
-            sevenQuestions();
-
         }
-        // CALLING UPON ITSELF TO REPEAT TILL EXIT CONDITION IS MET
     });
-
-
-
-
-
-    $(".instructions").on("click", function(){  //INSTRUCTIONS BEFORE YOU PLAY
-        $("#button").css('visibility','hidden');
-        $(".read").css('visibility','hidden');
-
-    sevenQuestions(); //ONCLICK OF THE START BUTTON THE GAME
-
-    setInterval(function () { //FUNCTION: TIME INTERVAL TO START WHEN USER BEGINS GAME
-        $("#countDownTimer_Placeholder").html(countDown);
-        countDown--;
-        if (countDown === 0) {
-            clearInterval(countDown);
-            runResultsForGame();
-        }
-    }, 1000);
-    });
-
-
 
 });
-
-
-//DEFINE YOUR FUNCTIONS CONCISLY
